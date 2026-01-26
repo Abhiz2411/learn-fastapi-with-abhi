@@ -391,3 +391,65 @@ The `get_product_by_id` function allows a user to retrieve the details of a sing
   "quantity": 30
 }
 ```
+
+# Documentation: Add a New Product
+
+### 1. Function Overview
+The `add_product` function allows clients to send data to the API to create and store a new product in the system's memory.
+
+### 2. Logic Flow
+
+
+1.  **Input:** The API receives a JSON object in the **Request Body**.
+2.  **Validation:** FastAPI uses the `Product` Pydantic model to ensure all required fields (name, price, etc.) are present and have the correct data types.
+3.  **Processing:** The validated `product` object is appended to the global `products` list.
+4.  **Output:** The function returns the newly created product object back to the user to confirm successful creation.
+
+### 3. Key Concepts Used
+
+| Concept | Implementation in Code | Purpose |
+| :--- | :--- | :--- |
+| **POST Method** | `@app.post("/product")` | Used for sending data to the server to create a resource. |
+| **Request Body** | `product: Product` | Tells FastAPI to look for the data inside the body of the HTTP request, not the URL. |
+| **Pydantic Model** | `Product` | Automatically converts the incoming JSON into a Python object and validates it. |
+| **In-Memory Storage**| `products.append()` | Temporarily saves the data in a Python list (data is lost if the server restarts). |
+
+### 4. API Specification
+
+**Endpoint:** `/product`  
+**Method:** `POST`
+
+**Example Request Body (JSON):**
+```json
+{
+  "id": 5,
+  "name": "tablet",
+  "description": "high-res display",
+  "price": 299,
+  "quantity": 15
+}
+```
+
+**Example Successful Response (JSON):**
+```json
+{
+  "id": 5,
+  "name": "tablet",
+  "description": "high-res display",
+  "price": 299,
+  "quantity": 15
+}
+```
+
+### 5. Interaction with Swagger UI
+1. Navigate to /docs.
+
+2. Find the POST /product endpoint.
+
+3. Click Try it out.
+
+4. FastAPI will provide a pre-filled JSON template based on your Product model.
+
+5. Modify the values in the JSON box and click Execute.
+
+6. Verify the result by calling the GET /products endpoint to see your new item in the list.
