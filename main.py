@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import database_models
 from database import SessionLocal, engine
@@ -7,6 +8,15 @@ from models import Product
 database_models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+# CORS for React dev server
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_db():
     db = SessionLocal()
@@ -62,8 +72,6 @@ def create_product(product: Product, db: Session = Depends(get_db)):
     db.add(database_models.Product(**product.model_dump()))
     db.commit()
     return {"message": "Product created successfully", "product": product}
-
-@app.put("/products/{product_id}")
 
 @app.put("/products/{product_id}")
 def update_product(product_id: int, product: Product, db: Session = Depends(get_db)):
